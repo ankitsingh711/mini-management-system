@@ -5,7 +5,7 @@ import { store } from "./store";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/login";
-import Register from "./pages//register";
+import Register from "./pages/register";
 import Dashboard from "./pages/dashboard";
 import Customers from "./pages/customer";
 import Notifications from "./pages/notification";
