@@ -1,14 +1,14 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { Toaster } from 'react-hot-toast';
-import { store } from './store';
-import Layout from './components/Layout';
-import ProtectedRoute from './components/ProtectedRoute';
-import Login from './pages/login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import Customers from './pages/customer';
-import Notifications from './pages/Notifications';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Provider } from "react-redux";
+import { Toaster } from "react-hot-toast";
+import { store } from "./store";
+import Layout from "./components/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Login from "./pages/login";
+import Register from "./pages//register";
+import Dashboard from "./pages/dashboard";
+import Customers from "./pages/customer";
+import Notifications from "./pages/notification";
 
 function App() {
   return (
