@@ -3,8 +3,11 @@ import { useEffect } from 'react';
 import { Bell, Check } from 'lucide-react';
 import { RootState } from '../store';
 import { fetchNotificationsAsync, markAsReadAsync, markAllAsReadAsync } from '../store/slices/notificationSlice';
+import useWebSocket from '../hooks/socket';
 
 const Notifications = () => {
+  const userId = useSelector((state: RootState) => state.auth.user?.id)
+  useWebSocket(userId);
   const notifications = useSelector((state: RootState) => state.notifications.items);
   const dispatch = useDispatch();
 

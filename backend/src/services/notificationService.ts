@@ -1,17 +1,18 @@
 import ElasticClient from "../config/db";
+import { broadcastNotification } from "../app";
 
 export interface Notification {
-    id?: string;
-    userId: string;
-    title: string;
-    message: string;
-    isRead: boolean;
-    createdAt?: Date;
-  }  
+  id?: string;
+  userId: string;
+  title: string;
+  message: string;
+  isRead: boolean;
+  createdAt?: Date;
+}
 
 // CREATE Notification
 export const createNotificationService = async (data: Notification): Promise<string> => {
-  await ElasticClient.index({
+  const result = await ElasticClient.index({
     index: "notifications",
     document: {
       ...data,
@@ -20,6 +21,7 @@ export const createNotificationService = async (data: Notification): Promise<str
     },
   });
 
+  broadcastNotification({ ...data, id: result._id });
   return "Notification created successfully";
 };
 
@@ -31,32 +33,26 @@ export const getNotificationsByUserService = async (userId: string): Promise<Not
     sort: [{ createdAt: { order: "desc" } }],
   });
 
-  return result.hits.hits.map(hit => hit._source as Notification);
+  return result.hits.hits.map((hit) => ({ id: hit._id, ...hit._source })) as Notification[];
 };
 
 // MARK Notification as Read
 export const markNotificationAsReadService = async (id: string): Promise<string> => {
-  await ElasticClient.update({
+  const result = await ElasticClient.update({
     index: "notifications",
     id,
     doc: { isRead: true },
   });
 
-  return "Notification marked as read";
+  if (result.result === "updated") {
+    broadcastNotification({ id, isRead: true } as Notification);
+    return "Notification marked as read";
+  }
+
+  throw new Error("Notification not found");
 };
 
-// DELETE Notification
-export const deleteNotificationService = async (id: string): Promise<string> => {
-  await ElasticClient.delete({
-    index: "notifications",
-    id,
-  });
-
-  return "Notification deleted successfully";
-};
-
-// Read ALL Notification
-
+// MARK All Notifications as Read
 export const markAllNotificationsAsReadService = async (userId: string): Promise<string> => {
   const result = await ElasticClient.updateByQuery({
     index: "notifications",
@@ -66,9 +62,10 @@ export const markAllNotificationsAsReadService = async (userId: string): Promise
     },
   });
 
-  if (result.updated === 0) {
-    throw new Error("No notifications found to update");
+  if ((result.updated ?? 0) > 0) {
+    broadcastNotification({ userId, isRead: true } as Notification);
+    return "All notifications marked as read";
   }
 
-  return "All notifications marked as read";
+  throw new Error("No notifications found to update");
 };

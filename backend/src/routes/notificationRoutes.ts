@@ -1,19 +1,43 @@
-import express from "express";
+import { Router } from "express";
 import {
-  createNotification,
-  getNotificationsByUser,
-  markNotificationAsRead,
-  deleteNotification,
-  markAllNotificationsAsRead,
-} from "../controllers/notificationController";
-import { authenticate } from "middleware/authMiddleware";
+  getNotificationsByUserService,
+  markNotificationAsReadService,
+  markAllNotificationsAsReadService,
+} from "../services/notificationService";
 
-const router = express.Router();
+const router = Router();
 
-router.post("/", authenticate, createNotification);                    // Create a notification
-router.get("/:userId", authenticate, getNotificationsByUser);          // Get notifications for a user
-router.patch("/:id/read", authenticate, markNotificationAsRead);       // Mark a notification as read
-router.patch("/:id/read-all", authenticate, markAllNotificationsAsRead);       // Mark a notification as read
-router.delete("/:id", authenticate, deleteNotification);               // Delete a notification
+// GET Notifications by User ID
+router.get("/:userId", async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const notifications = await getNotificationsByUserService(userId);
+    res.json(notifications);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// PATCH Mark Notification as Read
+router.patch("/:id/read", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const message = await markNotificationAsReadService(id);
+    res.json({ message });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// PATCH Mark All Notifications as Read
+router.patch("/:userId/read-all", async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const message = await markAllNotificationsAsReadService(userId);
+    res.json({ message });
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default router;
