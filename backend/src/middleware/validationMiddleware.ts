@@ -9,9 +9,9 @@ export const validationMiddleware = (req: Request, res: Response, next: NextFunc
       success: false,
       errors: errors.array(),
     });
-    return; // ✅ Ensure the function exits after sending the response
+    return;
   }
 
   next();
-  return; // ✅ Added return after next() to ensure all paths return a value
+  return;
 };

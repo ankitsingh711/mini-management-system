@@ -4,7 +4,7 @@ import {logger} from '../config/logger';
 
 export const getCustomers = async (req: Request, res: Response) => {
   try {
-    const customers = await addCustomerService(req.body);
+    const customers = await getCustomersService();
     res.json(customers);
   } catch (error: any) {
     logger.error(error.message);
@@ -14,7 +14,7 @@ export const getCustomers = async (req: Request, res: Response) => {
 
 export const createCustomer = async (req: Request, res: Response) => {
   try {
-    const customer = await getCustomersService();
+    const customer = await addCustomerService(req.body);
     res.status(201).json(customer);
   } catch (error: any) {
     logger.error(error.message);

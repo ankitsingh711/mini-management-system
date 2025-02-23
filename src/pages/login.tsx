@@ -20,13 +20,12 @@ const Login = () => {
 
   const onSubmit = async (data: LoginForm) => {
     try {
-      console.log('data-->', data)
       const response = await fetch(`http://localhost:6754/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-      console.log('response-->', response)
+      console.log(response)
       if (!response.ok) throw new Error('Login failed');
 
       const result = await response.json();
