@@ -1,14 +1,14 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Provider } from "react-redux";
-import { Toaster } from "react-hot-toast";
-import { store } from "./store";
-import Layout from "./components/Layout";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Login from "./pages/login";
-import Register from "./pages/register";
-import Dashboard from "./pages/dashboard";
-import Customers from "./pages/customer";
-import Notifications from "./pages/notification";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { Toaster } from 'react-hot-toast';
+import { store } from './store';
+import Layout from './components/Layout';
+import PrivateRoute from './components/ProtectedRoute';
+import Login from './pages/login';
+import Register from './pages/register';
+import Dashboard from './pages/dashboard';
+import Customers from './pages/customer';
+import Notifications from './pages//notification';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route element={<Layout />}>
-              <Route element={<ProtectedRoute />}>
+              <Route element={<PrivateRoute />}>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/customers" element={<Customers />} />
                 <Route path="/notifications" element={<Notifications />} />

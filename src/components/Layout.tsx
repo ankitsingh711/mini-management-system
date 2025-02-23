@@ -1,15 +1,8 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store';
-import Sidebar from './Sidebar';
-import Header from './Header';
+import { Outlet } from "react-router-dom";
+import Sidebar from "./Sidebar";
+import Header from "./Header";
 
 const Layout = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
-
-  if (!user) return null;
-
   return (
     <div className="flex h-screen">
       <Sidebar />

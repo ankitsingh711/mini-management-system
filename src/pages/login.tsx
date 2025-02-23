@@ -20,9 +20,17 @@ const Login = () => {
 
   const onSubmit = async (data: LoginForm) => {
     try {
-      // TODO: Implement actual login API call
-      const response = { user: { id: '1', email: data.email, name: 'John Doe' }, token: 'dummy-token' };
-      dispatch(setCredentials(response));
+      console.log('data-->', data)
+      const response = await fetch(`http://localhost:6754/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      console.log('response-->', response)
+      if (!response.ok) throw new Error('Login failed');
+
+      const result = await response.json();
+      dispatch(setCredentials(result));
       navigate('/');
     } catch (error) {
       toast.error('Login failed. Please try again.');
@@ -44,13 +52,21 @@ const Login = () => {
                 Email address
               </label>
               <input
-                {...register('email', { required: 'Email is required' })}
+                {...register('email', {
+                  required: 'Email is required',
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: 'Invalid email address',
+                  },
+                })}
                 type="email"
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.email.message}
+                </p>
               )}
             </div>
             <div>
@@ -58,13 +74,21 @@ const Login = () => {
                 Password
               </label>
               <input
-                {...register('password', { required: 'Password is required' })}
+                {...register('password', {
+                  required: 'Password is required',
+                  minLength: {
+                    value: 6,
+                    message: 'Password must be at least 6 characters',
+                  },
+                })}
                 type="password"
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.password.message}
+                </p>
               )}
             </div>
           </div>
@@ -78,7 +102,7 @@ const Login = () => {
             </button>
           </div>
 
-          <div className="text-center">
+          <div className="text-sm text-center">
             <Link
               to="/register"
               className="font-medium text-indigo-600 hover:text-indigo-500"

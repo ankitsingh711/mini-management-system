@@ -2,27 +2,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Customer } from '../../types';
 
 interface CustomerState {
-  customers: Customer[];
+  items: Customer[];
   loading: boolean;
   error: string | null;
-  filters: {
-    search: string;
-    paymentStatus: 'all' | 'pending' | 'completed';
-    sortBy: 'name' | 'dueDate' | 'amount';
-    sortOrder: 'asc' | 'desc';
-  };
 }
 
 const initialState: CustomerState = {
-  customers: [],
+  items: [],
   loading: false,
   error: null,
-  filters: {
-    search: '',
-    paymentStatus: 'all',
-    sortBy: 'dueDate',
-    sortOrder: 'asc',
-  },
 };
 
 const customerSlice = createSlice({
@@ -30,28 +18,28 @@ const customerSlice = createSlice({
   initialState,
   reducers: {
     setCustomers: (state, action: PayloadAction<Customer[]>) => {
-      state.customers = action.payload;
+      state.items = action.payload;
+      state.loading = false;
+      state.error = null;
     },
     addCustomer: (state, action: PayloadAction<Customer>) => {
-      state.customers.push(action.payload);
+      state.items.push(action.payload);
     },
     updateCustomer: (state, action: PayloadAction<Customer>) => {
-      const index = state.customers.findIndex(c => c.id === action.payload.id);
+      const index = state.items.findIndex((c) => c.id === action.payload.id);
       if (index !== -1) {
-        state.customers[index] = action.payload;
+        state.items[index] = action.payload;
       }
     },
     deleteCustomer: (state, action: PayloadAction<string>) => {
-      state.customers = state.customers.filter(c => c.id !== action.payload);
+      state.items = state.items.filter((c) => c.id !== action.payload);
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
-    setError: (state, action: PayloadAction<string | null>) => {
+    setError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
-    },
-    setFilters: (state, action: PayloadAction<Partial<CustomerState['filters']>>) => {
-      state.filters = { ...state.filters, ...action.payload };
+      state.loading = false;
     },
   },
 });
@@ -63,7 +51,6 @@ export const {
   deleteCustomer,
   setLoading,
   setError,
-  setFilters,
 } = customerSlice.actions;
 
 export default customerSlice.reducer;

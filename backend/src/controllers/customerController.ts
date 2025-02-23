@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import {createCustomerService, getCustomersService } from '../services/customerService';
+import {addCustomerService, getCustomersService } from '../services/customerService';
 import {logger} from '../config/logger';
 
 export const getCustomers = async (req: Request, res: Response) => {
   try {
-    const customers = await createCustomerService(req.body);
+    const customers = await addCustomerService(req.body);
     res.json(customers);
   } catch (error: any) {
     logger.error(error.message);

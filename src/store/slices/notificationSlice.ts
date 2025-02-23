@@ -2,13 +2,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Notification } from '../../types';
 
 interface NotificationState {
-  notifications: Notification[];
-  unreadCount: number;
+  items: Notification[];
 }
 
 const initialState: NotificationState = {
-  notifications: [],
-  unreadCount: 0,
+  items: [],
 };
 
 const notificationSlice = createSlice({
@@ -16,27 +14,21 @@ const notificationSlice = createSlice({
   initialState,
   reducers: {
     addNotification: (state, action: PayloadAction<Notification>) => {
-      state.notifications.unshift(action.payload);
-      if (!action.payload.read) {
-        state.unreadCount += 1;
-      }
+      state.items.unshift(action.payload);
     },
     markAsRead: (state, action: PayloadAction<string>) => {
-      const notification = state.notifications.find(n => n.id === action.payload);
-      if (notification && !notification.read) {
+      const notification = state.items.find((n) => n.id === action.payload);
+      if (notification) {
         notification.read = true;
-        state.unreadCount -= 1;
       }
     },
     markAllAsRead: (state) => {
-      state.notifications.forEach(n => {
-        n.read = true;
+      state.items.forEach((notification) => {
+        notification.read = true;
       });
-      state.unreadCount = 0;
     },
-    setNotifications: (state, action: PayloadAction<Notification[]>) => {
-      state.notifications = action.payload;
-      state.unreadCount = action.payload.filter(n => !n.read).length;
+    clearNotifications: (state) => {
+      state.items = [];
     },
   },
 });
@@ -45,7 +37,7 @@ export const {
   addNotification,
   markAsRead,
   markAllAsRead,
-  setNotifications,
+  clearNotifications,
 } = notificationSlice.actions;
 
 export default notificationSlice.reducer;

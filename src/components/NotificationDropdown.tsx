@@ -1,8 +1,8 @@
-import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { format } from 'date-fns';
 import { RootState } from '../store';
 import { markAsRead, markAllAsRead } from '../store/slices/notificationSlice';
+import { Notification } from '../types';
 
 const NotificationDropdown = () => {
   const dispatch = useDispatch();
@@ -36,7 +36,7 @@ const NotificationDropdown = () => {
           </div>
         ) : (
           <div className="divide-y divide-gray-200">
-            {notifications.map((notification) => (
+            {notifications.map((notification: Notification) => (
               <div
                 key={notification.id}
                 className={`p-4 ${notification.read ? 'bg-white' : 'bg-blue-50'}`}
