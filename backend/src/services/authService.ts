@@ -7,9 +7,10 @@ export interface User {
   name: string;
   email: string;
   password: string;
+  confirmPassword: string;
 }
 
-export const registerUserService = async (userData: User): Promise<string> => {
+export const registerUserService = async (userData: User): Promise<{ message: string; }> => {
   const existingUser = await ElasticClient.search<User>({
     index: "users",
     query: { match_phrase: { email: userData.email.toLowerCase() } },
@@ -21,19 +22,21 @@ export const registerUserService = async (userData: User): Promise<string> => {
 
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
+  const hashedConfirmPassword = await bcrypt.hash(userData.confirmPassword, saltRounds);
 
-  await ElasticClient.index({
+  const result = await ElasticClient.index({
     index: "users",
-    document: { ...userData, email: userData.email.toLowerCase(), password: hashedPassword },
+    document: { ...userData, email: userData.email.toLowerCase(), password: hashedPassword, confirmPassword: hashedConfirmPassword },
   });
 
-  return "User registered successfully";
+  return { message: "User registered successfully" };
 };
+
 
 export const loginUserService = async (
   email: string,
   password: string
-): Promise<{ message: string; token?: string }> => {
+): Promise<{ message: string; token?: string; user?: Omit<User, "password"> }> => {
   const result = await ElasticClient.search<User>({
     index: "users",
     query: { match_phrase: { email: email.toLowerCase() } },
@@ -60,6 +63,8 @@ export const loginUserService = async (
     process.env.JWT_SECRET!,
     { expiresIn: "1d" }
   );
+  
+  const { password: _, ...userWithoutPassword } = user;
 
-  return { message: "Login successful", token };
+  return { message: "Login successful", token, user: userWithoutPassword };
 };

@@ -1,8 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { setCredentials } from '../store/slices/authSlice';
 import { toast } from 'react-hot-toast';
+import { useAppDispatch } from '../hooks/dispatch';
 
 interface LoginForm {
   email: string;
@@ -16,7 +16,7 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginForm>();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const onSubmit = async (data: LoginForm) => {
     try {
@@ -29,6 +29,7 @@ const Login = () => {
       if (!response.ok) throw new Error('Login failed');
 
       const result = await response.json();
+      toast.success('Login Success !')
       dispatch(setCredentials(result));
       navigate('/');
     } catch (error) {

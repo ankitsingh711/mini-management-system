@@ -18,7 +18,7 @@ export interface Customer {
 
 export interface Notification {
   id: string;
-  type: 'payment_received' | 'payment_overdue' | 'new_customer';
+  type: 'success' | 'error';
   message: string;
   read: boolean;
   createdAt: string;

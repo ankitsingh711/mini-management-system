@@ -4,6 +4,7 @@ import {
   getNotificationsByUserService,
   markNotificationAsReadService,
   deleteNotificationService,
+  markAllNotificationsAsReadService,
 } from "../services/notificationService";
 
 // CREATE Notification
@@ -46,5 +47,15 @@ export const deleteNotification = async (req: Request, res: Response) => {
     res.status(200).json({ message });
   } catch (error) {
     res.status(500).json({ error: "Failed to delete notification" });
+  }
+};
+
+export const markAllNotificationsAsRead = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.userId;
+    const message = await markAllNotificationsAsReadService(userId);
+    res.status(200).json({ message });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to mark all notifications as read" });
   }
 };

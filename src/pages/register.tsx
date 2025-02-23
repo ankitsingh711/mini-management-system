@@ -1,7 +1,5 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { setCredentials } from '../store/slices/authSlice';
 import { toast } from 'react-hot-toast';
 
 interface RegisterForm {
@@ -19,7 +17,6 @@ const Register = () => {
     formState: { errors },
   } = useForm<RegisterForm>();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const onSubmit = async (data: RegisterForm) => {
     try {
@@ -32,9 +29,9 @@ const Register = () => {
 
       if (!response.ok) throw new Error('Registration failed');
 
-      const result = await response.json();
-      dispatch(setCredentials(result));
-      navigate('/');
+      await response.json();
+      toast.success('Registration completed ! Please login');
+      navigate('/login');
     } catch (error) {
       toast.error('Registration failed. Please try again.');
     }

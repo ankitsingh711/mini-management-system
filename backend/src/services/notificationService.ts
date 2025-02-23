@@ -54,3 +54,21 @@ export const deleteNotificationService = async (id: string): Promise<string> => 
 
   return "Notification deleted successfully";
 };
+
+// Read ALL Notification
+
+export const markAllNotificationsAsReadService = async (userId: string): Promise<string> => {
+  const result = await ElasticClient.updateByQuery({
+    index: "notifications",
+    query: { match: { userId } },
+    script: {
+      source: "ctx._source.isRead = true",
+    },
+  });
+
+  if (result.updated === 0) {
+    throw new Error("No notifications found to update");
+  }
+
+  return "All notifications marked as read";
+};

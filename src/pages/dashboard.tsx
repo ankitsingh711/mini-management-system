@@ -6,15 +6,15 @@ const Dashboard = () => {
   const customers = useSelector((state: RootState) => state.customers.items);
   const notifications = useSelector((state: RootState) => state.notifications.items);
 
-  const totalOutstanding = customers.reduce((sum, customer) => sum + customer.outstandingAmount, 0);
+  const totalOutstanding = customers.reduce((sum, customer) => sum + Number(customer.outstandingAmount), 0);
   const overdueCustomers = customers.filter(customer => 
     customer.paymentStatus === 'overdue'
   ).length;
-
+  console.log(totalOutstanding)
   const stats = [
     {
       name: 'Total Outstanding',
-      value: `$${totalOutstanding.toLocaleString()}`,
+      value: `$${totalOutstanding}`,
       icon: BarChart3,
       change: '+4.75%',
       changeType: 'increase',

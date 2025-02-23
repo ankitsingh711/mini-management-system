@@ -1,18 +1,23 @@
 import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 import { Bell, Check } from 'lucide-react';
 import { RootState } from '../store';
-import { markAsRead, markAllAsRead } from '../store/slices/notificationSlice';
+import { fetchNotificationsAsync, markAsReadAsync, markAllAsReadAsync } from '../store/slices/notificationSlice';
 
 const Notifications = () => {
   const notifications = useSelector((state: RootState) => state.notifications.items);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(fetchNotificationsAsync() as any);
+  }, [dispatch]);
+
   const handleMarkAsRead = (id: string) => {
-    dispatch(markAsRead(id));
+    dispatch(markAsReadAsync(id) as any);
   };
 
   const handleMarkAllAsRead = () => {
-    dispatch(markAllAsRead());
+    dispatch(markAllAsReadAsync() as any);
   };
 
   return (

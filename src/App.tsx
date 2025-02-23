@@ -1,7 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Provider } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
-import { store } from './store';
 import Layout from './components/Layout';
 import PrivateRoute from './components/ProtectedRoute';
 import Login from './pages/login';
@@ -12,7 +10,6 @@ import Notifications from './pages//notification';
 
 function App() {
   return (
-    <Provider store={store}>
       <Router>
         <div className="min-h-screen bg-gray-50">
           <Toaster position="top-right" />
@@ -29,7 +26,6 @@ function App() {
           </Routes>
         </div>
       </Router>
-    </Provider>
   );
 }
 

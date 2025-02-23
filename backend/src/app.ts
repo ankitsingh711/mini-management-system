@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import authRoutes from './routes/authRoutes';
 import customerRoutes from './routes/customerRoutes';
 import paymentRoutes from './routes/paymentRoutes';
+import notificationRoutes from './routes/notificationRoutes';
 import { errorMiddleware } from './middleware/errorMiddleware';
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/notifications', notificationRoutes)
 
 app.use(errorMiddleware);
 
